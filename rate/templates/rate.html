@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rate</title>
+</head>
+<body>
+<form method="POST" action="">{% csrf_token %}
+    {% if request.user.is_authenticated %}
+    <h1> Welcome {{ request.user.username }}</h1>
+    {% endif %}
+    <h2>Rate {{movie}}</h2>
+
+
+    <p>{{form}}</p>
+    <input type="submit" name="submit" value="rate!"/>
+    <input type="submit" name="logout"  value="logout"/>
+    <input type="submit" name="creategroup"  value="creategroup"/>
+    <input type="submit" name="recommend"  value="recommend"/>
+
+</form>
+</body>
+</html>

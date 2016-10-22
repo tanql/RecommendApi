@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create group</title>
+</head>
+<body>
+<form method="POST" action="">{% csrf_token %}
+    <p>{{form}}</p>
+    <input type="submit" name="add" value="add user" />
+
+    <p> the group: {{group}}</p>
+
+
+    <p>Have you seen a lot of movies lately? Are there any genres you are tired of right now? Add them here!</p>
+
+    <select name="item_id">
+    {% for entry in items %}
+        <option value="{{ entry }}">{{ entry }}</option>
+    {% endfor %}
+    </select>
+    <select name="related_user">
+    {% for entry in group %}
+        <option value="{{ entry }}">{{ entry }}</option>
+    {% endfor %}
+    </select>
+
+    <input type="submit" name="addmisery" value="add"/>
+    <input type="submit" name="finished" value="finished"/>
+    <input type="submit" name="delete" value="delete"/>
+    <input type="submit" name="reset" value="reset"/>
+    <input type="submit" name="recommend" value="recommend"/>
+
+    <p>context: {{usermisery}}</p>
+
+</form>
+</body>
+</html>
