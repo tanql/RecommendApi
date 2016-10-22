@@ -9,11 +9,6 @@ from rest_framework import status
 from csv import reader
 from .disable import CsrfExemptSessionAuthentication
 global dictionaryInit
-dictionaryInit=False
-global usermisery
-usermisery={}
-global group
-group=[]
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import pagination
