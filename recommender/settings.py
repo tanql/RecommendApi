@@ -84,9 +84,11 @@ WSGI_APPLICATION = 'recommender.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'myproject',
-        'USER': 'myprojectuser',
-        'PASSWORD':'4012',
+        'NAME': 'd2r0l95pvgueji',
+        'USER': 'lupvyuquodisjl',
+        'HOST': 'ec2-50-17-249-147.compute-1.amazonaws.com',
+        'PASSWORD':'rvlvR_Q-UuPb_mJ5wh8jRY58py',
+        'PORT':'5432'
 
     }
 }
