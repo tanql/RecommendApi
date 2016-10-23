@@ -182,7 +182,7 @@ class RecommendView(APIView):
 
 def getdata(request):
     global fm
-    if Movie.objects.filter().count()>0:
+    if Movie.objects.filter().count()>99999:
         def loadData(filename,path="data/"):
             data = []
             y = []
