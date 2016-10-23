@@ -15,4 +15,4 @@ sklearn==0.0
 static3==0.7.0
 whitenoise==3.2.2
 wsgiref==0.1.2
-pyfm
+git+https://github.com/coreylynch/pyFM
