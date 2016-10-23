@@ -223,6 +223,8 @@ def getdata(request):
         }
         return render(request, "getdata.html", context)
     else:
+        lastSeenId = float('-Inf')
+
         rows = Movie.objects.all().order_by('movieId')
 
         for row in rows:
