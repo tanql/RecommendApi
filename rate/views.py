@@ -182,7 +182,7 @@ class RecommendView(APIView):
 
 def getdata(request):
     global fm
-    if Movie.objects.filter().count()>99999:
+    if Movie.objects.filter().count()>0:
         def loadData(filename,path="data/"):
             data = []
             y = []
@@ -223,15 +223,7 @@ def getdata(request):
         }
         return render(request, "getdata.html", context)
     else:
-        lastSeenId = float('-Inf')
 
-        rows = Movie.objects.all().order_by('movieId')
-
-        for row in rows:
-            if row.movieId == lastSeenId:
-                row.delete() # We've seen this id in a previous row
-            else: # New id found, save it and check future rows for duplicates.
-                lastSeenId = row.movieId
         movie_list=[]
         m = open('data/movies.csv', 'r')
         for line in reader(m):
