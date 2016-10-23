@@ -223,6 +223,13 @@ def getdata(request):
         }
         return render(request, "getdata.html", context)
     else:
+        rows = Movie.objects.all().order_by('movieId')
+
+        for row in rows:
+            if row.movieId == lastSeenId:
+                row.delete() # We've seen this id in a previous row
+            else: # New id found, save it and check future rows for duplicates.
+                lastSeenId = row.movieId
         movie_list=[]
         m = open('data/movies.csv', 'r')
         for line in reader(m):
