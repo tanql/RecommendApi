@@ -60,7 +60,6 @@ class CustomPaginator(pagination.PageNumberPagination):
 
 class RateView(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication,SessionAuthentication)
-    permission_classes = (IsAuthenticated)
 
     def get(self, request, format=None):
         movielist = list(reversed(Movie.objects.all().order_by('year')))
@@ -87,7 +86,6 @@ class RateView(APIView):
 
 class RecommendView(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication,SessionAuthentication)
-    permission_classes = (IsAuthenticated)
     def get(self, request, format=None):
 
         user=MyUser.objects.get(user=request.user)
