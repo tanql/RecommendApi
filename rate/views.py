@@ -71,7 +71,7 @@ class RateView(APIView):
 
         return paginator.get_paginated_response(serializer.data)
     def post(self, request, format=None):
-        user=MyUser.objects.get(user=request.user)
+        user=MyUser.objects.get(userID=request.POST['userID'])
         movie = Movie.objects.get(movieId=request.POST['movieId'])
         rating = Rating(ratingValue=request.POST['ratingValue'], movie=movie, user=user)
         rating.save()
@@ -141,42 +141,8 @@ class RecommendView(APIView):
 
 
         return paginator.get_paginated_response(result_page)
-    def post(self, request, format=None):
-        user=MyUser.objects.get(user=request.user)
 
-        ratings = Rating.objects.filter(user=user)
-        seenMovies = []
-        for rating in ratings:
-            seenMovies.append(rating.movie.movieId)
-        if 'year'in request.POST:
-            print "yes"
-            movies = Movie.objects.exclude(year__lt=request.POST['year']).exclude(movieId__in=seenMovies)
-
-
-        predictList=[]
-
-        for movie in movies:
-            predictList.append({'user_id':str(user.userID),'movie_id':str(movie.movieId)})
-            if movie.year<2000:
-                print movie.movieName
-        v = DictVectorizer()
-        predict=v.fit_transform(predictList)
-        y=fm.predict(predict)
-        for x in range(0,len(predictList)):
-            predictList[x]['rating']=y[x]
-            predictList[x]['movieName']=movies[x].movieName
-
-
-
-        newlist = sorted(predictList, key=lambda k: k['rating'], reverse=True)
-
-
-
-        paginator = CustomPaginator()
-        result_page = paginator.paginate_queryset(newlist, request)
-
-        return paginator.get_paginated_response(result_page)
-
+        
 
 
 
