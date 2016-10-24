@@ -89,7 +89,6 @@ class RecommendView(APIView):
     def get(self, request, format=None):
 
         user=MyUser.objects.get(userID=int(request.GET.get('userID')))
-
         ratings = Rating.objects.filter(user=user)
         seenMovies = []
         for rating in ratings:
