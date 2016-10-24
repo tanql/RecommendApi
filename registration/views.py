@@ -48,7 +48,7 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication)
-    serializer_class=MyUserSerializer
+    serializer_class=UserSerializer
     def post(self,request, format=None):
 
         username = request.POST['username']
