@@ -16,9 +16,10 @@ from pyfm import pylibfm
 from sklearn.feature_extraction import DictVectorizer
 import numpy as np
 import time
+from rest_framework.permissions import IsAuthenticated
 
 
-from rest_framework.authentication import BasicAuthentication
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 
 
 """
@@ -58,7 +59,8 @@ class CustomPaginator(pagination.PageNumberPagination):
 
 
 class RateView(APIView):
-    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication,SessionAuthentication)
+    permission_classes = (IsAuthenticated)
 
     def get(self, request, format=None):
         movielist = list(reversed(Movie.objects.all().order_by('year')))
@@ -84,7 +86,8 @@ class RateView(APIView):
 
 
 class RecommendView(APIView):
-    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication,SessionAuthentication)
+    permission_classes = (IsAuthenticated)
     def get(self, request, format=None):
 
         user=MyUser.objects.get(user=request.user)
