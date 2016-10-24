@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 
 userID = 945
@@ -46,6 +47,8 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+
     def post(self,request, format=None):
 
         username = request.POST['username']
