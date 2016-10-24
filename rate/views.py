@@ -88,7 +88,7 @@ class RecommendView(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication,SessionAuthentication)
     def get(self, request, format=None):
 
-        user=MyUser.objects.get(user=request.user)
+        user=MyUser.objects.get(userID=request.GET.get('userID'))
 
         ratings = Rating.objects.filter(user=user)
         seenMovies = []
