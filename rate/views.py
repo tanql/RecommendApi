@@ -16,39 +16,11 @@ from pyfm import pylibfm
 from sklearn.feature_extraction import DictVectorizer
 import numpy as np
 import time
-from rest_framework.permissions import IsAuthenticated
 
 
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 
 
-"""
-def loadData(filename,path="data/"):
-    data = []
-    y = []
-    users=set()
-    items=set()
-    with open(path+filename) as f:
-        for line in f:
-            (user,movieid,rating,ts)=line.split(',')
-            data.append({ "user_id": str(user), "movie_id": str(movieid)})
-            y.append(float(rating))
-            users.add(user)
-            items.add(movieid)
-
-    return (data, np.array(y), users, items)
-
-(train_data, y_train, train_users, train_items) = loadData("train.csv")
-(test_data, y_test, test_users, test_items) = loadData("test.csv")
-v = DictVectorizer()
-X_train = v.fit_transform(train_data)
-X_test = v.transform(test_data)
-
-# Build and train a Factorization Machine
-fm = pylibfm.FM(num_factors=10, num_iter=10, verbose=True, task="regression", initial_learning_rate=0.001, learning_rate_schedule="optimal")
-fm.fit(X_train,y_train)
-s=pickle.dumps(fm, -1)
-"""
 class CustomPaginator(pagination.PageNumberPagination):
     def get_paginated_response(self, data):
         return Response({'next': self.get_next_link(),
@@ -142,7 +114,7 @@ class RecommendView(APIView):
 
         return paginator.get_paginated_response(result_page)
 
-        
+
 
 
 
