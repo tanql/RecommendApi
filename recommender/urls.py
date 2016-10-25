@@ -24,8 +24,6 @@ urlpatterns = [
 
     url(r'^api/recommend/', rateview.RecommendView.as_view()),
 
-    url(r'^login/$','registration.views.login', name='login'),
-    url(r'^logout/$','registration.views.logout_view', name='logout'),
     url(r'^getdata/$','rate.views.getdata', name='getdata'),
     url(r'^api-auth/', include('rest_framework.urls', namespace = 'rest_framework')),
     url(r'^', include(router.urls)),

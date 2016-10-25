@@ -47,7 +47,6 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
-    authentication_classes = (SessionAuthentication, BasicAuthentication)
     serializer_class=UserSerializer
     def post(self,request, format=None):
 
@@ -64,37 +63,6 @@ class LoginView(APIView):
                 print(serializer.data)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-
-def login(request):
-    if request.method=="POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                auth_login(request, user)
-                return HttpResponseRedirect("/rate")
-            else:
-            # Return a 'disabled account' error message
-                return HttpResponse("wrong")
-
-        else:
-            return HttpResponse("wrong")
-
-    else:
-
-        return render(request, "login.html")
-
-def logout_view(request):
-    logout(request)
-
-    return render(request, "login.html")
-    # Redirect to a success page.
 
 class LogOut(APIView):
     def get(self,request, format=None):

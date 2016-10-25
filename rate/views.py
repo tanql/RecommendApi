@@ -18,7 +18,7 @@ import numpy as np
 import time
 
 
-from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.authentication import BasicAuthentication
 
 
 class CustomPaginator(pagination.PageNumberPagination):
@@ -31,7 +31,7 @@ class CustomPaginator(pagination.PageNumberPagination):
 
 
 class RateView(APIView):
-    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication,SessionAuthentication)
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def get(self, request, format=None):
         movielist = list(reversed(Movie.objects.all().order_by('year')))
@@ -43,7 +43,7 @@ class RateView(APIView):
 
         return paginator.get_paginated_response(serializer.data)
     def post(self, request, format=None):
-        user=MyUser.objects.get(userID=request.POST['userID'])
+        user=MyUser.objects.get(user=request.user)
         movie = Movie.objects.get(movieId=request.POST['movieId'])
         rating = Rating(ratingValue=request.POST['ratingValue'], movie=movie, user=user)
         rating.save()
@@ -57,10 +57,10 @@ class RateView(APIView):
 
 
 class RecommendView(APIView):
-    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication,SessionAuthentication)
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     def get(self, request, format=None):
 
-        user=MyUser.objects.get(userID=int(request.GET.get('userID')))
+        user=MyUser.objects.get(user=request.user)
         ratings = Rating.objects.filter(user=user)
         seenMovies = []
         for rating in ratings:
