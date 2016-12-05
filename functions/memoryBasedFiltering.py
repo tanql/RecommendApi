@@ -1,5 +1,4 @@
 import math
-
 def average(x):
     if len(x) > 0:
         return float(sum(x)) / len(x)

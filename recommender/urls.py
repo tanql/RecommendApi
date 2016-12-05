@@ -21,9 +21,8 @@ urlpatterns = [
     url(r'^api/register/', views.RegisterView.as_view()),
     url(r'^api/logout/', views.LogOut.as_view()),
     url(r'^api/rate/', rateview.RateView.as_view()),
-
+    url(r'^api/movies/', rateview.MoviesView.as_view()),
     url(r'^api/recommend/', rateview.RecommendView.as_view()),
-
     url(r'^getdata/$','rate.views.getdata', name='getdata'),
     url(r'^api-auth/', include('rest_framework.urls', namespace = 'rest_framework')),
     url(r'^', include(router.urls)),

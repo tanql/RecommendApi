@@ -1,17 +1,17 @@
 from django.contrib.auth.models import User
 from .models import Movie, Genre, Rating
-from rest_framework import routers, serializers, viewsets
+from rest_framework import serializers
+from registration.serializers import MyUserSerializer
 
 
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ('url', 'username', 'email')
 class GenreSerializer(serializers.ModelSerializer):
+    user = MyUserSerializer(many=True)
+
     class Meta:
         model = Genre
+        fields = ('genre', 'user')
 
 class MovieSerializer(serializers.ModelSerializer):
     movieGenre = GenreSerializer(read_only=True, many=True)
@@ -21,9 +21,9 @@ class MovieSerializer(serializers.ModelSerializer):
         fields = ('movieName', 'movieGenre', 'movieId', 'year')
 
 class RatingSerializer(serializers.ModelSerializer):
-    user = UserSerializer
-    movie = MovieSerializer
+    user = MyUserSerializer()
+    movie = MovieSerializer()
 
     class Meta:
         model = Rating
-        fields = {'ratingValue','movie','user'}
+        fields = ('ratingValue','movie','user')

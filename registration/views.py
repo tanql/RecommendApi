@@ -1,33 +1,119 @@
-from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
 from .models import MyUser
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
-from rest_framework import viewsets
 from .serializers import UserSerializer, MyUserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
-
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rate.disable import CsrfExemptSessionAuthentication
+from rest_framework.authentication import BasicAuthentication
+from rate.models import Rating, Genre
+from rate.serializers import RatingSerializer, GenreSerializer
+import math
+from functions.memoryBasedFiltering import pearson
 
 
 userID = 945
 
+#functions to calculate similarities (pearson correlation)
+
+
 class CurrentPatient(APIView):
-    """
-    View for details about currently logged in patient
-    """
+
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def get(self, request, format=None):
+        if 'user' in request.GET:
+            user = User.objects.get(username=request.GET['user'])
+            myuser=MyUser.objects.get(user=user)
 
-        patient = User.objects.all().first()
-        serializer = UserSerializer(instance=patient, context={'request': request})
-        return Response(serializer.data)
+
+        else:
+            myuser=MyUser.objects.get(user=request.user)
+        genres=Genre.objects.filter(user=myuser)
+
+        serializer = MyUserSerializer(instance=myuser)
+
+        ratings=Rating.objects.filter(user=myuser).order_by('-date')
+
+        listOfRatings = []
+        babe=serializer.data
+        babe['interests']=[]
+        for genre in genres:
+            babe['interests'].append(genre.genre)
+
+
+        if (len(ratings)==0):
+
+            return Response(babe)
+
+        else:
+            if 'user' in request.GET:
+                listOfRatings=[]
+                count = 0
+                for rating in ratings:
+                    count=count+1
+                    newser=RatingSerializer(instance=rating)
+                    listOfRatings.append(newser.data)
+                    if (count==5):
+                        break
+
+                babe['ratedMovies']=listOfRatings
+                #finding what each user has rated on similar movies
+                thisUser=MyUser.objects.get(user=request.user)
+                myUserRatings = Rating.objects.filter(user=thisUser)
+                thisUserRatings =[]
+                otherUserRatings = []
+                for userRating in myUserRatings:
+
+                    for otherRating in ratings:
+                        if userRating.movie == otherRating.movie:
+                            thisUserRatings.append(userRating.ratingValue)
+                            otherUserRatings.append(otherRating.ratingValue)
+                print pearson(thisUserRatings,otherUserRatings)
+
+                babe['similarity']=round(pearson(thisUserRatings,otherUserRatings)*10)
+                print babe['similarity']
+                return Response(babe)
+            else:
+                count =0
+                for rating in ratings:
+                    count=count+1
+                    newser=RatingSerializer(instance=rating)
+                    listOfRatings.append(newser.data)
+                    if (count==5):
+                        break
+
+                babe['ratedMovies']=listOfRatings
+
+
+                return Response(babe)
+
+
+    def put(self,request,format=None):
+        myuser=MyUser.objects.get(user=request.user)
+        userGenres=Genre.objects.filter(user=myuser)
+        for userGenre in userGenres:
+            if userGenre.genre not in request.data['interests']:
+                print "her ja"
+
+                userGenre.user.remove(myuser)
+                print "removed"
+        myuser.age=request.data['age']
+
+        myuser.postCode=request.data['postCode']
+        myuser.save()
+        print request.data['interests']
+        for genre in request.data['interests']:
+            print "hei"
+            genres=Genre.objects.get(genre=genre)
+
+            if myuser not in genres.user.all():
+                genres.user.add(myuser)
+        return Response({'data':"ok"},status=status.HTTP_200_OK)
+
 
 class RegisterView(APIView):
     def post(self,request, format=None):
@@ -47,6 +133,8 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
     serializer_class=UserSerializer
     def post(self,request, format=None):
 
