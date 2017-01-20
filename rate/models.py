@@ -5,7 +5,6 @@ from registration.models import MyUser
 from datetime import datetime
 
 
-# Create your models here.
 
 
 class Genre(models.Model):

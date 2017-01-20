@@ -16,7 +16,7 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^api/users/', views.CurrentPatient.as_view()),
+    url(r'^api/users/', views.CurrentUser.as_view()),
     url(r'^api/login/', views.LoginView.as_view()),
     url(r'^api/register/', views.RegisterView.as_view()),
     url(r'^api/logout/', views.LogOut.as_view()),
